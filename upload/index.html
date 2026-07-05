@@ -178,61 +178,6 @@
     margin-top: 14px;
   }
 
-  /* Preview state */
-  .preview-frame {
-    border-radius: var(--radius);
-    overflow: hidden;
-    border: 1px solid var(--border);
-    background: #fafafa;
-    max-height: 360px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .preview-frame img {
-    width: 100%;
-    max-height: 360px;
-    object-fit: contain;
-    display: block;
-  }
-
-  .pdf-preview {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 24px;
-    width: 100%;
-  }
-
-  .pdf-icon {
-    font-size: 2.4rem;
-    flex-shrink: 0;
-  }
-
-  .pdf-info {
-    overflow: hidden;
-  }
-
-  .pdf-name {
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .pdf-size {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 2px;
-  }
-
-  .section-label {
-    font-weight: 600;
-    font-size: 1rem;
-    margin: 0 0 12px;
-  }
-
   /* Confirmation state */
   .confirm-wrap {
     text-align: center;
@@ -364,22 +309,6 @@
       </p>
     </section>
 
-    <!-- PREVIEW STATE -->
-    <section id="previewState" class="hidden" aria-labelledby="previewHeading">
-      <h1 id="previewHeading">Preview</h1>
-      <p class="subtitle">Check that the document is clear and readable.</p>
-
-      <div class="preview-frame" id="previewFrame"></div>
-
-      <div class="actions-row">
-        <button type="button" class="btn-primary" id="useFileBtn">Use this file</button>
-      </div>
-      <div class="actions-row">
-        <button type="button" class="btn-secondary" id="retakeBtn">Retake</button>
-        <button type="button" class="btn-danger-text" id="removeBtn">Remove</button>
-      </div>
-    </section>
-
     <!-- CONFIRMATION STATE -->
     <section id="confirmState" class="hidden" aria-labelledby="confirmHeading">
       <div class="confirm-wrap">
@@ -408,7 +337,6 @@
   const ACCEPTED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".heic", ".heif", ".pdf"];
 
   const uploadState = document.getElementById("uploadState");
-  const previewState = document.getElementById("previewState");
   const confirmState = document.getElementById("confirmState");
 
   const dropzone = document.getElementById("dropzone");
@@ -419,11 +347,6 @@
   const errorMsg = document.getElementById("errorMsg");
   const errorText = document.getElementById("errorText");
 
-  const previewFrame = document.getElementById("previewFrame");
-  const useFileBtn = document.getElementById("useFileBtn");
-  const retakeBtn = document.getElementById("retakeBtn");
-  const removeBtn = document.getElementById("removeBtn");
-
   const confirmFileRow = document.getElementById("confirmFileRow");
   const startOverBtn = document.getElementById("startOverBtn");
 
@@ -432,7 +355,6 @@
 
   function showState(state) {
     uploadState.classList.add("hidden");
-    previewState.classList.add("hidden");
     confirmState.classList.add("hidden");
     state.classList.remove("hidden");
   }
@@ -458,12 +380,6 @@
     return file.name.toLowerCase().endsWith(".pdf");
   }
 
-  function formatFileSize(bytes) {
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-  }
-
   function revokeObjectUrl() {
     if (currentObjectUrl) {
       URL.revokeObjectURL(currentObjectUrl);
@@ -471,7 +387,7 @@
     }
   }
 
-  function handleFile(file, source) {
+  function handleFile(file) {
     if (!file) {
       showError("No file was selected. Please choose a file to continue.");
       return;
@@ -484,55 +400,8 @@
 
     clearError();
     currentFile = file;
-
-    if (source === "camera") {
-      // Only a freshly captured photo needs a review step (accept/retake/remove).
-      renderPreview(file);
-      showState(previewState);
-    } else {
-      // Browse and drag-and-drop are already a deliberate file choice, so
-      // skip the preview and go straight to the confirmation state.
-      renderConfirmation(file);
-      showState(confirmState);
-    }
-  }
-
-  function renderPreview(file) {
-    revokeObjectUrl();
-    previewFrame.innerHTML = "";
-
-    if (isPdf(file)) {
-      const wrap = document.createElement("div");
-      wrap.className = "pdf-preview";
-
-      const icon = document.createElement("div");
-      icon.className = "pdf-icon";
-      icon.setAttribute("aria-hidden", "true");
-      icon.textContent = "📕";
-
-      const info = document.createElement("div");
-      info.className = "pdf-info";
-
-      const name = document.createElement("div");
-      name.className = "pdf-name";
-      name.textContent = file.name;
-
-      const size = document.createElement("div");
-      size.className = "pdf-size";
-      size.textContent = formatFileSize(file.size);
-
-      info.appendChild(name);
-      info.appendChild(size);
-      wrap.appendChild(icon);
-      wrap.appendChild(info);
-      previewFrame.appendChild(wrap);
-    } else {
-      currentObjectUrl = URL.createObjectURL(file);
-      const img = document.createElement("img");
-      img.src = currentObjectUrl;
-      img.alt = "Preview of the uploaded ID document";
-      previewFrame.appendChild(img);
-    }
+    renderConfirmation(file);
+    showState(confirmState);
   }
 
   function resetToUpload() {
@@ -589,12 +458,12 @@
 
   fileInput.addEventListener("change", (e) => {
     const file = e.target.files && e.target.files[0];
-    handleFile(file, "file");
+    handleFile(file);
   });
 
   cameraInput.addEventListener("change", (e) => {
     const file = e.target.files && e.target.files[0];
-    handleFile(file, "camera");
+    handleFile(file);
   });
 
   // Drag and drop
@@ -619,25 +488,7 @@
     e.stopPropagation();
     dropzone.classList.remove("dragover");
     const file = e.dataTransfer.files && e.dataTransfer.files[0];
-    handleFile(file, "file");
-  });
-
-  // Preview actions
-  useFileBtn.addEventListener("click", () => {
-    if (!currentFile) return;
-    renderConfirmation(currentFile);
-    showState(confirmState);
-  });
-
-  retakeBtn.addEventListener("click", () => {
-    fileInput.value = "";
-    cameraInput.value = "";
-    clearError();
-    showState(uploadState);
-  });
-
-  removeBtn.addEventListener("click", () => {
-    resetToUpload();
+    handleFile(file);
   });
 
   startOverBtn.addEventListener("click", () => {
