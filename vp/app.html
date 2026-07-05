@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blink Vendor Onboarding — Application</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-white text-gray-900">
+
+  <!-- Top bar -->
+  <header class="flex items-center justify-between border-b border-gray-100 px-10 py-5">
+    <a href="index.html" class="flex items-center gap-1.5 text-lg font-extrabold">
+      <span class="flex gap-0.5">
+        <span class="h-5 w-1.5 rounded-sm bg-gray-900"></span>
+        <span class="h-5 w-1.5 rounded-sm bg-gray-900"></span>
+      </span>
+      Blink
+    </a>
+
+    <button type="button" class="flex items-center gap-2 text-sm font-medium text-gray-900">
+      <svg class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      </svg>
+      Michael James Anderson
+      <svg class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+      </svg>
+    </button>
+  </header>
+
+  <div class="flex">
+
+    <!-- Sidebar -->
+    <aside class="flex w-64 shrink-0 flex-col justify-between border-r border-gray-100 px-6 py-8">
+      <div>
+        <div class="h-1 w-full overflow-hidden rounded-full bg-gray-200">
+          <div id="progress-bar" class="h-full rounded-full bg-indigo-600 transition-all duration-300"></div>
+        </div>
+
+        <nav class="mt-8 space-y-5" id="step-nav">
+          <button type="button" data-nav-index="0" class="step-nav-item flex w-full items-center gap-3 text-left">
+            <span class="step-marker flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold"></span>
+            <span class="step-label text-sm">Profile</span>
+          </button>
+          <button type="button" data-nav-index="1" class="step-nav-item flex w-full items-center gap-3 text-left">
+            <span class="step-marker flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold"></span>
+            <span class="step-label text-sm">Personal information</span>
+          </button>
+          <button type="button" data-nav-index="2" class="step-nav-item flex w-full items-center gap-3 text-left">
+            <span class="step-marker flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold"></span>
+            <span class="step-label text-sm">Tax Information</span>
+          </button>
+          <button type="button" data-nav-index="3" class="step-nav-item flex w-full items-center gap-3 text-left">
+            <span class="step-marker flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold"></span>
+            <span class="step-label text-sm">Payment information</span>
+          </button>
+          <button type="button" data-nav-index="4" class="step-nav-item flex w-full items-center gap-3 text-left">
+            <span class="step-marker flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold"></span>
+            <span class="step-label text-sm">Review & Submit</span>
+          </button>
+        </nav>
+      </div>
+
+      <button type="button" class="flex items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+        </svg>
+        Have questions?
+      </button>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 px-12 py-10">
+      <div class="max-w-2xl">
+
+        <!-- STEP 0: Profile -->
+        <section data-step-panel="0">
+          <h1 class="text-3xl font-bold text-gray-900">Your profile</h1>
+          <p class="mt-2 text-sm text-gray-500">
+            To get started, we need to understand how you'll work with us and how payments should be handled.
+          </p>
+
+          <p class="mt-8 text-sm text-gray-900">Are you an individual or a company?</p>
+          <div class="mt-3 space-y-3">
+            <div data-group="profile-type" data-value="individual" class="option-card flex cursor-pointer items-center justify-between gap-4 rounded-xl border p-4">
+              <div class="flex items-center gap-3">
+                <span class="radio-indicator flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"></span>
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">Individual</p>
+                  <p class="text-sm text-gray-500">You'll work with us and receive payments to a personal account.</p>
+                </div>
+              </div>
+              <span class="option-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
+                </svg>
+              </span>
+            </div>
+
+            <div data-group="profile-type" data-value="company" class="option-card flex cursor-pointer items-center justify-between gap-4 rounded-xl border p-4">
+              <div class="flex items-center gap-3">
+                <span class="radio-indicator flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"></span>
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">Company</p>
+                  <p class="text-sm text-gray-500">Your contracts and payments will be handled through a company.</p>
+                </div>
+              </div>
+              <span class="option-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <p class="mt-8 text-sm text-gray-900">Are you the company's legal representative?</p>
+          <div class="mt-3 space-y-3">
+            <div data-group="legal-rep" data-value="yes" class="option-card flex cursor-pointer items-center gap-3 rounded-xl border p-4">
+              <span class="radio-indicator flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"></span>
+              <div>
+                <p class="text-sm font-semibold text-gray-900">Yes, I am</p>
+                <p class="text-sm text-gray-500">I can sign contracts, issue invoices, and handle payments for the company.</p>
+              </div>
+            </div>
+
+            <div data-group="legal-rep" data-value="no" class="option-card flex cursor-pointer items-center gap-3 rounded-xl border p-4">
+              <span class="radio-indicator flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"></span>
+              <div>
+                <p class="text-sm font-semibold text-gray-900">No, I'm not</p>
+                <p class="text-sm text-gray-500">We'll ask for the legal representative's details later.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 1: Personal information -->
+        <section data-step-panel="1" class="hidden">
+          <h1 class="text-3xl font-bold text-gray-900">Personal information</h1>
+          <p class="mt-2 text-sm text-gray-500">
+            To verify your identity, we need some personal information and a valid ID document.
+          </p>
+
+          <div class="mt-8">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Step 1</p>
+            <p class="mt-1 text-sm font-semibold text-gray-900">Identification document</p>
+            <p id="id-doc-helper" class="mt-1 text-sm text-gray-500">
+              We accept driver's licenses, state or national ID cards, and passports. Make sure the image is clear and readable.
+            </p>
+
+            <div id="id-upload" class="upload-row mt-4" data-state="empty">
+              <input type="file" class="hidden" data-role="file-input" accept=".jpg,.jpeg,.png,.heic,.pdf" />
+
+              <div data-role="empty-view" class="flex items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 p-4">
+                <span data-role="thumbnail-slot" class="relative flex h-14 w-16 shrink-0 items-center justify-center rounded-lg bg-gray-50 text-gray-400">
+                  <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 4.5h19.5A.75.75 0 0 1 21 5.25v13.5a.75.75 0 0 1-.75.75H2.25a.75.75 0 0 1-.75-.75V5.25a.75.75 0 0 1 .75-.75Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 15a2.25 2.25 0 0 1 4.5 0M8.25 11.25a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM13.5 9.75h5.25M13.5 12.75h5.25" />
+                  </svg>
+                  <span class="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-white">
+                    <svg class="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                  </span>
+                </span>
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">ID verification</p>
+                  <p class="text-sm text-gray-600">
+                    <button type="button" data-role="browse-trigger" class="font-semibold text-gray-900 underline">Browse file</button>
+                    or drag it here
+                  </p>
+                  <p class="mt-0.5 text-xs text-gray-400">JPG, PNG or BMP, with a maximum size of 5 MB</p>
+                </div>
+              </div>
+
+              <div data-role="filled-view" class="hidden flex items-center gap-4 rounded-xl border border-gray-200 p-4">
+                <span data-role="thumbnail-slot" class="flex h-14 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-100 text-gray-400"></span>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-semibold text-gray-900">ID verification</p>
+                  <p data-role="file-name" class="truncate text-sm text-gray-500">filename.pdf</p>
+                  <button type="button" data-role="replace-trigger" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700">Replace file</button>
+                </div>
+                <button type="button" data-role="delete-trigger" class="shrink-0 text-gray-400 hover:text-gray-600" aria-label="Remove file">
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-8 border-gray-100" />
+
+          <div id="legal-name-section" class="locked-section">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Step 2</p>
+            <p class="section-heading mt-1 text-sm font-semibold">Legal name</p>
+            <p class="section-subtext mt-1 text-sm">We'll use this name for your tax forms and agreement.</p>
+
+            <div class="mt-4 flex items-end gap-3">
+              <div class="flex-1">
+                <label class="text-sm text-gray-700">Given name(s)</label>
+                <input type="text" value="Michael James" disabled class="section-input mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" />
+              </div>
+              <div class="flex-1">
+                <label class="text-sm text-gray-700">Family name / Surname</label>
+                <input type="text" value="Anderson" disabled class="section-input mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" />
+              </div>
+              <button type="button" id="edit-legal-name" class="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50" disabled>
+                Edit
+              </button>
+            </div>
+          </div>
+
+          <hr class="my-8 border-gray-100" />
+
+          <div id="personal-details-section" class="locked-section">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Step 3</p>
+            <p class="section-heading mt-1 text-sm font-semibold">Personal details</p>
+            <p class="section-subtext mt-1 text-sm">Enter your contact details and address to complete your profile.</p>
+
+            <div class="mt-4">
+              <label class="text-sm text-gray-700">Alias / DBA</label>
+              <input type="text" placeholder="Enter your business name" disabled class="section-input mt-1 w-full rounded-lg border px-3 py-2.5 text-sm placeholder:text-gray-400" />
+              <p class="section-subtext mt-1 text-xs">This is a hint text to help user.</p>
+            </div>
+
+            <div class="mt-4 flex gap-3">
+              <div class="flex-1">
+                <label class="text-sm text-gray-700">Email</label>
+                <input type="email" placeholder="Enter your email address" disabled class="section-input mt-1 w-full rounded-lg border px-3 py-2.5 text-sm placeholder:text-gray-400" />
+              </div>
+              <div class="flex-1">
+                <label class="text-sm text-gray-700">Phone number</label>
+                <div class="section-input mt-1 flex items-center rounded-lg border">
+                  <span class="flex items-center gap-1 border-r px-3 py-2.5 text-sm">🇺🇸
+                    <svg class="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                  </span>
+                  <input type="tel" placeholder="+1 555 000-0000" disabled class="w-full bg-transparent px-3 py-2.5 text-sm placeholder:text-gray-400" />
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <label class="text-sm text-gray-700">Address</label>
+              <input type="text" placeholder="Enter your address" disabled class="section-input mt-1 w-full rounded-lg border px-3 py-2.5 text-sm placeholder:text-gray-400" />
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 2: Tax information -->
+        <section data-step-panel="2" class="hidden">
+          <h1 class="text-3xl font-bold text-gray-900">Tax information</h1>
+          <p class="mt-2 text-sm text-gray-500">Tell us where you pay taxes and we'll provide the right form.</p>
+
+          <p class="mt-8 text-sm font-semibold text-gray-900">Tax residency</p>
+          <p class="mt-1 text-sm text-gray-500">Where do you pay taxes?</p>
+
+          <div class="mt-3 grid grid-cols-2 gap-3">
+            <div data-group="tax-residency" data-value="us" class="option-card flex cursor-pointer items-center justify-between gap-3 rounded-xl border p-4">
+              <div class="flex items-center gap-3">
+                <span class="radio-indicator flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"></span>
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">United States</p>
+                  <p class="text-sm text-gray-500">W-9 form</p>
+                </div>
+              </div>
+              <span class="text-xl">🇺🇸</span>
+            </div>
+
+            <div data-group="tax-residency" data-value="outside" class="option-card flex cursor-pointer items-center justify-between gap-3 rounded-xl border p-4">
+              <div class="flex items-center gap-3">
+                <span class="radio-indicator flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"></span>
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">Outside United States</p>
+                  <p class="text-sm text-gray-500">Form W-8BEN</p>
+                </div>
+              </div>
+              <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A8.959 8.959 0 0 1 3 12c0-.778.099-1.533.284-2.253" />
+              </svg>
+            </div>
+          </div>
+
+          <p class="mt-8 text-sm font-semibold text-gray-900">Complete your tax form</p>
+          <p class="mt-1 text-sm text-gray-500">Download the form, fill it out, and sign it by hand</p>
+
+          <div class="mt-4 flex flex-col items-center rounded-xl border border-gray-200 px-6 py-8 text-center">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 text-gray-400">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
+              </svg>
+            </div>
+            <p class="mt-3 text-sm text-gray-700">Use this exact name on the form</p>
+            <p class="mt-3 rounded-md bg-indigo-50 px-4 py-1.5 font-serif text-lg italic text-indigo-700">Michael James Anderson</p>
+            <p class="mx-auto mt-3 max-w-sm text-xs text-gray-400">
+              Your tax form must match this name exactly. Do not use nicknames, initials, or a shortened version.
+            </p>
+            <button type="button" class="mt-4 flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+              </svg>
+              Download IRS W-9 form
+            </button>
+          </div>
+
+          <p class="mt-8 text-sm font-semibold text-gray-900">Upload signed W9 form</p>
+
+          <div id="w9-upload" class="upload-row mt-3" data-state="empty">
+            <input type="file" class="hidden" data-role="file-input" accept=".jpg,.jpeg,.png,.heic,.pdf" />
+
+            <div data-role="empty-view" class="flex items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 p-4">
+              <span data-role="thumbnail-slot" class="relative flex h-14 w-16 shrink-0 items-center justify-center rounded-lg bg-gray-50 text-gray-400">
+                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+              </span>
+              <div>
+                <p class="text-sm font-semibold text-gray-900">Freelance agreement</p>
+                <p class="text-sm text-gray-600">
+                  <button type="button" data-role="browse-trigger" class="font-semibold text-gray-900 underline">Browse file</button>
+                  or drag it here
+                </p>
+                <p class="mt-0.5 text-xs text-gray-400">JPG, PNG or BMP, with a maximum size of 5 MB</p>
+              </div>
+            </div>
+
+            <div data-role="filled-view" class="hidden flex items-center gap-4 rounded-xl border border-gray-200 p-4">
+              <span data-role="thumbnail-slot" class="flex h-14 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-100 text-gray-400"></span>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-semibold text-gray-900">Freelance agreement</p>
+                <p data-role="file-name" class="truncate text-sm text-gray-500">filename.pdf</p>
+                <button type="button" data-role="replace-trigger" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700">Replace file</button>
+              </div>
+              <button type="button" data-role="delete-trigger" class="shrink-0 text-gray-400 hover:text-gray-600" aria-label="Remove file">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 3: Payment information -->
+        <section data-step-panel="3" class="hidden">
+          <h1 class="text-3xl font-bold text-gray-900">Payment information</h1>
+          <p class="mt-2 text-sm text-gray-500">Add your payment details so we can send your payments correctly.</p>
+
+          <div class="mt-6 space-y-4">
+            <div>
+              <label class="text-sm text-gray-700">Payment country</label>
+              <div class="relative mt-1">
+                <select class="w-full appearance-none rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-400">
+                  <option>Select</option>
+                  <option>United States</option>
+                  <option>Argentina</option>
+                  <option>Spain</option>
+                </select>
+                <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+              </div>
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-700">Recipient full name</label>
+              <input type="text" value="Michael James Anderson" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900" />
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-700">Recipient address</label>
+              <div class="relative mt-1">
+                <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+                <input type="text" placeholder="Street, city, state/province, postal code" class="w-full rounded-lg border border-gray-300 py-2.5 pl-9 pr-3 text-sm placeholder:text-gray-400" />
+              </div>
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-700">Bank name</label>
+              <input type="text" placeholder="Enter bank name" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm placeholder:text-gray-400" />
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-700">Bank address</label>
+              <input type="text" placeholder="Street, city, state/province, postal code" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm placeholder:text-gray-400" />
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-700">Account type</label>
+              <div class="relative mt-1">
+                <select class="w-full appearance-none rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-400">
+                  <option>Select</option>
+                  <option>Checking</option>
+                  <option>Savings</option>
+                </select>
+                <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex-1">
+                <label class="flex items-center gap-1 text-sm text-gray-700">
+                  Routing Number / ABA
+                  <svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" /></svg>
+                </label>
+                <input type="text" placeholder="9 digits" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm placeholder:text-gray-400" />
+              </div>
+              <div class="flex-1">
+                <label class="flex items-center gap-1 text-sm text-gray-700">
+                  Account Number
+                  <svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" /></svg>
+                </label>
+                <input type="text" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm" />
+              </div>
+            </div>
+
+            <div>
+              <label class="flex items-center gap-1 text-sm text-gray-700">
+                Additional information
+                <svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" /></svg>
+              </label>
+              <textarea rows="3" placeholder="Enter any additional information" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm placeholder:text-gray-400"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 4: Review & Submit -->
+        <section data-step-panel="4" class="hidden">
+          <h1 class="text-3xl font-bold text-gray-900">Review</h1>
+          <p class="mt-2 text-sm text-gray-500">
+            Please review this summary of your information below. Check the fields carefully, as errors will cause delays in your onboarding.
+          </p>
+
+          <div class="mt-8 border-t border-dashed border-gray-200 pt-6">
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-semibold text-gray-900">Profile</p>
+              <button type="button" class="rounded-lg border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">Edit</button>
+            </div>
+            <div class="mt-3 flex text-sm">
+              <span class="w-40 text-gray-500">Type</span>
+              <span class="text-gray-900">Individual</span>
+            </div>
+          </div>
+
+          <div class="mt-6 border-t border-dashed border-gray-200 pt-6">
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-semibold text-gray-900">Personal information</p>
+              <button type="button" class="rounded-lg border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">Edit</button>
+            </div>
+            <div class="mt-3 flex text-sm">
+              <span class="w-40 shrink-0 text-gray-500">ID</span>
+              <span class="flex h-16 w-24 items-center justify-center rounded-md bg-gray-100 text-xs text-gray-400">ID thumbnail</span>
+            </div>
+            <div class="mt-3 flex text-sm">
+              <span class="w-40 text-gray-500">Full name</span>
+              <span class="text-gray-900">Hernan Solari</span>
+            </div>
+            <div class="mt-3 flex text-sm">
+              <span class="w-40 text-gray-500">Email</span>
+              <span class="text-gray-900">hernansolari@gmail.com</span>
+            </div>
+            <div class="mt-3 flex text-sm">
+              <span class="w-40 text-gray-500">Phone number</span>
+              <span class="text-gray-900">+54 11 4343-4545</span>
+            </div>
+            <div class="mt-3 flex text-sm">
+              <span class="w-40 text-gray-500">Address</span>
+              <span class="text-gray-900">Av. Callao 100, C1040 CABA, Argentina</span>
+            </div>
+          </div>
+
+          <div class="mt-6 border-t border-dashed border-gray-200 pt-6">
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-semibold text-gray-900">Payment details</p>
+              <button type="button" class="rounded-lg border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">Edit</button>
+            </div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Recipient full name</span><span class="text-gray-900">Olivia Carter</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Recipient address</span><span class="text-gray-900">2458 Westlake Avenue, Seattle, WA 981...</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Bank name</span><span class="text-gray-900">Chase Bank</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Bank address</span><span class="text-gray-900">270 Park Avenue, New York, NY 10017</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">ACH Routing number</span><span class="text-gray-900">021000021</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Bank account number</span><span class="text-gray-900">458972341256</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Bank / Branch code</span><span class="text-gray-900">NYC-4582</span></div>
+          </div>
+
+          <div class="mt-6 border-t border-dashed border-gray-200 pt-6">
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-semibold text-gray-900">Company information</p>
+              <button type="button" class="rounded-lg border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">Edit</button>
+            </div>
+            <div class="mt-3 flex items-start gap-2 rounded-lg bg-indigo-50 p-3 text-sm text-indigo-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>
+              We'll contact your company's legal representative to complete the onboarding
+            </div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Company name</span><span class="text-gray-900">Torres Inc.</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Legal representative</span><span class="text-gray-900">Mariano Torres</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Email</span><span class="text-gray-900">marianotorres@gmail.com</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Phone number</span><span class="text-gray-900">+54 11 4343-4545</span></div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Address</span><span class="text-gray-900">Av. Callao 100, C1040 CABA, Argentina</span></div>
+          </div>
+
+          <div class="mt-6 border-t border-dashed border-gray-200 pt-6">
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-semibold text-gray-900">Taxes</p>
+              <button type="button" class="rounded-lg border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">Edit</button>
+            </div>
+            <div class="mt-3 flex text-sm"><span class="w-40 text-gray-500">Tax form</span><span class="text-gray-900">Fw9.pdf</span></div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="flex items-center justify-between border-t border-gray-100 px-10 py-5">
+    <button type="button" id="back-btn" class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+    </button>
+
+    <div class="flex items-center gap-3">
+      <button type="button" id="skip-btn" class="hidden rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+        Skip
+      </button>
+      <button type="button" id="continue-btn" class="rounded-lg bg-gray-900 px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-800">
+        Continue
+      </button>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
