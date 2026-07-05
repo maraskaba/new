@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload ID Document</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --card-bg: #ffffff;
+    --border: #d8dbe0;
+    --border-hover: #4f7cff;
+    --text: #1a1d23;
+    --text-muted: #6b7280;
+    --accent: #4f7cff;
+    --accent-hover: #3a63e0;
+    --error: #d64545;
+    --error-bg: #fdecec;
+    --success: #1f9d55;
+    --success-bg: #eafaf0;
+    --radius: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05);
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    margin: 0 0 4px;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0 0 20px;
+  }
+
+  /* Dropzone */
+  .dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    outline-offset: 4px;
+  }
+
+  .dropzone:hover,
+  .dropzone:focus-visible {
+    border-color: var(--border-hover);
+    background: #f7f9ff;
+  }
+
+  .dropzone.dragover {
+    border-color: var(--accent);
+    background: #eef2ff;
+  }
+
+  .dropzone-icon {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+  }
+
+  .dropzone p {
+    margin: 4px 0;
+  }
+
+  .dz-primary {
+    font-weight: 600;
+    font-size: 1.02rem;
+  }
+
+  .dz-secondary {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .dz-formats {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin-top: 10px;
+  }
+
+  .actions-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    padding: 12px 18px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.15s ease, transform 0.05s ease;
+  }
+
+  button:active { transform: scale(0.98); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    flex: 1;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+
+  .btn-secondary {
+    background: #eef0f3;
+    color: var(--text);
+    flex: 1;
+  }
+  .btn-secondary:hover { background: #e2e5ea; }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--border);
+    flex: 1;
+  }
+  .btn-outline:hover { background: #f7f9ff; }
+
+  .btn-danger-text {
+    background: transparent;
+    color: var(--error);
+    flex: 1;
+  }
+  .btn-danger-text:hover { background: var(--error-bg); }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .error-msg {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--error-bg);
+    color: var(--error);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    margin-top: 14px;
+  }
+
+  /* Preview state */
+  .preview-frame {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #fafafa;
+    max-height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .preview-frame img {
+    width: 100%;
+    max-height: 360px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .pdf-preview {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 24px;
+    width: 100%;
+  }
+
+  .pdf-icon {
+    font-size: 2.4rem;
+    flex-shrink: 0;
+  }
+
+  .pdf-info {
+    overflow: hidden;
+  }
+
+  .pdf-name {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pdf-size {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+
+  .section-label {
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0 0 12px;
+  }
+
+  /* Confirmation state */
+  .confirm-wrap {
+    text-align: center;
+    padding: 12px 0 4px;
+  }
+
+  .confirm-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--success-bg);
+    color: var(--success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 16px;
+  }
+
+  .confirm-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  .confirm-sub {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin: 0 0 22px;
+  }
+
+  .confirm-file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    background: #f7f8fa;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 22px;
+  }
+
+  .confirm-file img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .confirm-file .file-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    background: #eef0f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .confirm-file-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .confirm-file-status {
+    color: var(--success);
+    font-size: 0.82rem;
+    margin-top: 1px;
+  }
+
+  .hidden { display: none !important; }
+
+  [data-camera-only] { display: none; }
+  @media (pointer: coarse) {
+    [data-camera-only] { display: inline-block; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="card">
+
+    <!-- UPLOAD STATE -->
+    <section id="uploadState" aria-labelledby="uploadHeading">
+      <h1 id="uploadHeading">Upload your ID document</h1>
+      <p class="subtitle">We accept a passport, driver's license, or national ID card.</p>
+
+      <div
+        id="dropzone"
+        class="dropzone"
+        tabindex="0"
+        role="button"
+        aria-label="Drag and drop your file here, or activate to browse files"
+      >
+        <div class="dropzone-icon" aria-hidden="true">📄</div>
+        <p class="dz-primary">Drag and drop your file here</p>
+        <p class="dz-secondary">or browse files</p>
+        <p class="dz-formats">Supported: JPG, PNG, HEIC, PDF</p>
+      </div>
+
+      <div class="actions-row">
+        <button type="button" class="btn-primary" id="browseBtn">Browse file</button>
+        <button type="button" class="btn-outline" id="cameraBtn" data-camera-only>Take a photo</button>
+      </div>
+
+      <input
+        type="file"
+        id="fileInput"
+        class="visually-hidden"
+        accept="image/jpeg,image/png,image/heic,image/heif,application/pdf"
+      >
+      <input
+        type="file"
+        id="cameraInput"
+        class="visually-hidden"
+        accept="image/*"
+        capture="environment"
+      >
+
+      <p class="error-msg hidden" id="errorMsg" role="alert">
+        <span aria-hidden="true">⚠️</span>
+        <span id="errorText"></span>
+      </p>
+    </section>
+
+    <!-- PREVIEW STATE -->
+    <section id="previewState" class="hidden" aria-labelledby="previewHeading">
+      <h1 id="previewHeading">Preview</h1>
+      <p class="subtitle">Check that the document is clear and readable.</p>
+
+      <div class="preview-frame" id="previewFrame"></div>
+
+      <div class="actions-row">
+        <button type="button" class="btn-primary" id="useFileBtn">Use this file</button>
+      </div>
+      <div class="actions-row">
+        <button type="button" class="btn-secondary" id="retakeBtn">Retake</button>
+        <button type="button" class="btn-danger-text" id="removeBtn">Remove</button>
+      </div>
+    </section>
+
+    <!-- CONFIRMATION STATE -->
+    <section id="confirmState" class="hidden" aria-labelledby="confirmHeading">
+      <div class="confirm-wrap">
+        <div class="confirm-icon" aria-hidden="true">✓</div>
+        <h1 id="confirmHeading" class="confirm-title">Your ID is ready to submit</h1>
+        <p class="confirm-sub">We've saved your document locally. Nothing has been sent yet.</p>
+      </div>
+
+      <div class="confirm-file" id="confirmFileRow">
+        <!-- filled dynamically -->
+      </div>
+
+      <div class="actions-row">
+        <button type="button" class="btn-secondary" id="startOverBtn">Upload a different file</button>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/heic", "image/heif", "application/pdf"];
+  const ACCEPTED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".heic", ".heif", ".pdf"];
+
+  const uploadState = document.getElementById("uploadState");
+  const previewState = document.getElementById("previewState");
+  const confirmState = document.getElementById("confirmState");
+
+  const dropzone = document.getElementById("dropzone");
+  const browseBtn = document.getElementById("browseBtn");
+  const cameraBtn = document.getElementById("cameraBtn");
+  const fileInput = document.getElementById("fileInput");
+  const cameraInput = document.getElementById("cameraInput");
+  const errorMsg = document.getElementById("errorMsg");
+  const errorText = document.getElementById("errorText");
+
+  const previewFrame = document.getElementById("previewFrame");
+  const useFileBtn = document.getElementById("useFileBtn");
+  const retakeBtn = document.getElementById("retakeBtn");
+  const removeBtn = document.getElementById("removeBtn");
+
+  const confirmFileRow = document.getElementById("confirmFileRow");
+  const startOverBtn = document.getElementById("startOverBtn");
+
+  let currentFile = null;
+  let currentObjectUrl = null;
+
+  function showState(state) {
+    uploadState.classList.add("hidden");
+    previewState.classList.add("hidden");
+    confirmState.classList.add("hidden");
+    state.classList.remove("hidden");
+  }
+
+  function showError(message) {
+    errorText.textContent = message;
+    errorMsg.classList.remove("hidden");
+  }
+
+  function clearError() {
+    errorMsg.classList.add("hidden");
+    errorText.textContent = "";
+  }
+
+  function isAcceptedFile(file) {
+    if (ACCEPTED_TYPES.includes(file.type)) return true;
+    const name = file.name.toLowerCase();
+    return ACCEPTED_EXTENSIONS.some((ext) => name.endsWith(ext));
+  }
+
+  function isPdf(file) {
+    if (file.type === "application/pdf") return true;
+    return file.name.toLowerCase().endsWith(".pdf");
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  function revokeObjectUrl() {
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+  }
+
+  function handleFile(file, source) {
+    if (!file) {
+      showError("No file was selected. Please choose a file to continue.");
+      return;
+    }
+
+    if (!isAcceptedFile(file)) {
+      showError("That file type isn't supported. Please upload a JPG, PNG, HEIC, or PDF file.");
+      return;
+    }
+
+    clearError();
+    currentFile = file;
+
+    if (source === "camera") {
+      // Only a freshly captured photo needs a review step (accept/retake/remove).
+      renderPreview(file);
+      showState(previewState);
+    } else {
+      // Browse and drag-and-drop are already a deliberate file choice, so
+      // skip the preview and go straight to the confirmation state.
+      renderConfirmation(file);
+      showState(confirmState);
+    }
+  }
+
+  function renderPreview(file) {
+    revokeObjectUrl();
+    previewFrame.innerHTML = "";
+
+    if (isPdf(file)) {
+      const wrap = document.createElement("div");
+      wrap.className = "pdf-preview";
+
+      const icon = document.createElement("div");
+      icon.className = "pdf-icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = "📕";
+
+      const info = document.createElement("div");
+      info.className = "pdf-info";
+
+      const name = document.createElement("div");
+      name.className = "pdf-name";
+      name.textContent = file.name;
+
+      const size = document.createElement("div");
+      size.className = "pdf-size";
+      size.textContent = formatFileSize(file.size);
+
+      info.appendChild(name);
+      info.appendChild(size);
+      wrap.appendChild(icon);
+      wrap.appendChild(info);
+      previewFrame.appendChild(wrap);
+    } else {
+      currentObjectUrl = URL.createObjectURL(file);
+      const img = document.createElement("img");
+      img.src = currentObjectUrl;
+      img.alt = "Preview of the uploaded ID document";
+      previewFrame.appendChild(img);
+    }
+  }
+
+  function resetToUpload() {
+    currentFile = null;
+    revokeObjectUrl();
+    fileInput.value = "";
+    cameraInput.value = "";
+    clearError();
+    showState(uploadState);
+  }
+
+  function renderConfirmation(file) {
+    confirmFileRow.innerHTML = "";
+
+    if (isPdf(file)) {
+      const box = document.createElement("div");
+      box.className = "file-icon-box";
+      box.setAttribute("aria-hidden", "true");
+      box.textContent = "📕";
+      confirmFileRow.appendChild(box);
+    } else {
+      if (!currentObjectUrl) {
+        currentObjectUrl = URL.createObjectURL(file);
+      }
+      const img = document.createElement("img");
+      img.src = currentObjectUrl;
+      img.alt = "";
+      confirmFileRow.appendChild(img);
+    }
+
+    const textWrap = document.createElement("div");
+    const name = document.createElement("div");
+    name.className = "confirm-file-name";
+    name.textContent = file.name;
+    const status = document.createElement("div");
+    status.className = "confirm-file-status";
+    status.textContent = "Ready to submit";
+    textWrap.appendChild(name);
+    textWrap.appendChild(status);
+    confirmFileRow.appendChild(textWrap);
+  }
+
+  // Browse button / dropzone click -> file picker
+  browseBtn.addEventListener("click", () => fileInput.click());
+  dropzone.addEventListener("click", () => fileInput.click());
+  dropzone.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      fileInput.click();
+    }
+  });
+
+  cameraBtn.addEventListener("click", () => cameraInput.click());
+
+  fileInput.addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    handleFile(file, "file");
+  });
+
+  cameraInput.addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    handleFile(file, "camera");
+  });
+
+  // Drag and drop
+  ["dragenter", "dragover"].forEach((evt) => {
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.add("dragover");
+    });
+  });
+
+  ["dragleave", "dragend"].forEach((evt) => {
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.remove("dragover");
+    });
+  });
+
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.classList.remove("dragover");
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    handleFile(file, "file");
+  });
+
+  // Preview actions
+  useFileBtn.addEventListener("click", () => {
+    if (!currentFile) return;
+    renderConfirmation(currentFile);
+    showState(confirmState);
+  });
+
+  retakeBtn.addEventListener("click", () => {
+    fileInput.value = "";
+    cameraInput.value = "";
+    clearError();
+    showState(uploadState);
+  });
+
+  removeBtn.addEventListener("click", () => {
+    resetToUpload();
+  });
+
+  startOverBtn.addEventListener("click", () => {
+    resetToUpload();
+  });
+})();
+</script>
+</body>
+</html>
