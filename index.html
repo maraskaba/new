@@ -13,390 +13,134 @@
     height: 100%;
     margin: 0;
     overflow: hidden;
-    background: #0d0d0d;
-    cursor: default;
+    transition: background-color 1.2s ease;
   }
 
-  .bg-layer {
+  .shapes-bg {
     position: fixed;
     inset: 0;
-    transition: opacity 2s ease;
     z-index: 0;
+    overflow: hidden;
   }
 
-  canvas#particles {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    mix-blend-mode: screen;
-    transition: opacity 1.4s ease;
+  .shape {
+    position: absolute;
+    opacity: 0.28;
+    transition: background-color 1.2s ease;
+    animation-name: pulseSize;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
   }
 
-  .vignette {
-    position: fixed;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
-    transition: opacity 1.4s ease;
-  }
+  .shape.circle   { border-radius: 50%; }
+  .shape.square   { border-radius: 10%; }
+  .shape.triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+  .shape.hexagon  { clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%); }
 
-  body.airport-mode #particles { opacity: 0; }
+  @keyframes pulseSize {
+    0%, 100% { transform: scale(var(--min-scale)); }
+    50%      { transform: scale(var(--max-scale)); }
+  }
 
   .stage {
     position: fixed;
     inset: 0;
-    z-index: 3;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    perspective: 1400px;
   }
 
   #title {
-    display: flex;
-    transform-style: preserve-3d;
-    margin: 0;
-    transition: transform 0.15s ease-out;
-  }
-
-  #title .letter {
-    display: inline-block;
     font-size: 11vw;
-    line-height: 1;
     letter-spacing: 0.04em;
-    transform-style: preserve-3d;
-    will-change: transform, opacity, filter;
-  }
-
-  #title .letter.out {
-    animation: letterOut 0.7s cubic-bezier(.55,0,.85,.35) both;
-    animation-delay: calc(var(--i) * 45ms);
-  }
-
-  #title .letter.in {
-    animation: letterIn 1s cubic-bezier(.2,.9,.25,1.2) both;
-    animation-delay: calc(var(--i) * 55ms);
-  }
-
-  @keyframes letterOut {
-    0%   { transform: rotateX(0deg) translateZ(0) scale(1); opacity: 1; filter: blur(0px); }
-    100% { transform: rotateX(110deg) translateZ(-420px) scale(0.5); opacity: 0; filter: blur(10px); }
-  }
-
-  @keyframes letterIn {
-    0%   { transform: rotateX(-110deg) translateZ(-420px) scale(0.5); opacity: 0; filter: blur(10px); }
-    55%  { transform: rotateX(18deg) translateZ(30px) scale(1.1); opacity: 1; filter: blur(0px); }
-    100% { transform: rotateX(0deg) translateZ(0) scale(1); opacity: 1; filter: blur(0px); }
-  }
-
-  .glow-pulse {
-    animation: glowPulse 3.2s ease-in-out infinite;
-  }
-
-  @keyframes glowPulse {
-    0%, 100% { filter: brightness(1) drop-shadow(0 0 10px var(--glow)); }
-    50%      { filter: brightness(1.25) drop-shadow(0 0 34px var(--glow)); }
-  }
-
-  /* ---- Airport split-flap board ---- */
-  body.airport-mode #title {
-    background: #050505;
-    padding: 26px 22px;
-    border-radius: 10px;
-    box-shadow: 0 0 50px rgba(0,0,0,0.65), inset 0 0 24px rgba(0,0,0,0.85);
-  }
-
-  #title .letter.airport-tile {
-    position: relative;
-    font-family: 'Space Mono', monospace;
-    font-weight: 700;
-    background: linear-gradient(to bottom, #1c1c1c 49%, #090909 51%);
-    color: #00ff33;
-    text-shadow: 0 0 8px rgba(255,180,0,0.6);
-    width: 0.92em;
+    margin: 0;
     text-align: center;
-    border-radius: 4px;
-    margin: 0 3px;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.85), 0 2px 5px rgba(0,0,0,0.6);
-    transform-origin: center center;
-  }
-
-  #title .letter.airport-tile::after {
-    content: "";
-    position: absolute;
-    left: 2px; right: 2px; top: 50%;
-    height: 1px;
-    background: rgba(0,0,0,0.75);
-    transform: translateY(-0.5px);
-  }
-
-  #title .letter.airport-tile.flapping {
-    animation: flapFlip 0.12s linear;
-  }
-
-  @keyframes flapFlip {
-    0%   { transform: rotateX(0deg); }
-    50%  { transform: rotateX(-90deg); }
-    100% { transform: rotateX(0deg); }
+    transition: opacity 0.6s ease, color 1s ease;
   }
 </style>
 </head>
 <body>
 
-<div class="bg-layer" id="bgA"></div>
-<div class="bg-layer" id="bgB"></div>
-<canvas id="particles"></canvas>
-<div class="vignette"></div>
+<div class="shapes-bg" id="shapesBg"></div>
 
 <div class="stage">
-  <h1 id="title"></h1>
+  <h1 id="title">MARASKABA</h1>
 </div>
 
 <script>
-  const TEXT = "MARASKABASSSS";
   const HOLD_MS = 10000;
 
   const themes = [
-    { font: "'Bebas Neue', sans-serif",     bg: "radial-gradient(circle at 30% 30%, #1c1c1c, #050505 75%)", color: "#ffffff", glow: "rgba(255,255,255,0.9)", particle: [255,255,255] },
-    { font: "'Playfair Display', serif",    bg: "radial-gradient(circle at 70% 30%, #f7ecd0, #e8d9ad 80%)", color: "#1c1c1c", glow: "rgba(212,175,55,0.9)",  particle: [28,28,28]    },
-    { font: "'Space Grotesk', sans-serif",  bg: "radial-gradient(circle at 30% 70%, #232350, #0b0b1e 80%)", color: "#f9d923", glow: "rgba(249,217,35,0.9)", particle: [249,217,35]  },
-    { font: "'Archivo Black', sans-serif",  bg: "radial-gradient(circle at 60% 40%, #efe9da, #d9d0ba 80%)", color: "#d7263d", glow: "rgba(215,38,61,0.85)", particle: [215,38,61]   },
-    { font: "'Courier Prime', monospace",   bg: "radial-gradient(circle at 40% 60%, #16222c, #060b0e 80%)", color: "#00e5ff", glow: "rgba(0,229,255,0.9)",  particle: [0,229,255]   },
-    { font: "'Righteous', cursive",         bg: "radial-gradient(circle at 50% 30%, #ffe9c7, #ffcf8f 80%)", color: "#6a0572", glow: "rgba(106,5,114,0.85)", particle: [106,5,114]   },
-    { font: "'Space Grotesk', sans-serif",  bg: "radial-gradient(circle at 30% 40%, #101a3a, #05070f 80%)", color: "#f77f00", glow: "rgba(247,127,0,0.9)",  particle: [247,127,0]   },
-    { font: "'Space Mono', monospace",      bg: "radial-gradient(circle at 50% 50%, #111111, #000000 85%)", color: "#ffb400", glow: "rgba(255,180,0,0.45)", particle: [255,180,0], airport: true },
+    { font: "'Bebas Neue', sans-serif",     bg: "#0d0d0d", color: "#ffffff", c1: "#ffffff", c2: "#8a8a8a" },
+    { font: "'Playfair Display', serif",    bg: "#f7ecd0", color: "#1c1c1c", c1: "#1c1c1c", c2: "#d4af37" },
+    { font: "'Space Grotesk', sans-serif",  bg: "#1a1a2e", color: "#f9d923", c1: "#f9d923", c2: "#4d4d8f" },
+    { font: "'Archivo Black', sans-serif",  bg: "#efe9da", color: "#d7263d", c1: "#d7263d", c2: "#3a3a3a" },
+    { font: "'Courier Prime', monospace",   bg: "#101820", color: "#00e5ff", c1: "#00e5ff", c2: "#0a6b7a" },
+    { font: "'Righteous', cursive",         bg: "#ffe9c7", color: "#6a0572", c1: "#6a0572", c2: "#f7a400" },
+    { font: "'Space Grotesk', sans-serif",  bg: "#0b132b", color: "#f77f00", c1: "#f77f00", c2: "#1c2e4a" },
+    { font: "'Space Mono', monospace",      bg: "#000000", color: "#ffb400", c1: "#ffb400", c2: "#3a3a3a" },
   ];
 
   const titleEl = document.getElementById("title");
-  const bgA = document.getElementById("bgA");
-  const bgB = document.getElementById("bgB");
-  let showingA = true;
+  const shapesBg = document.getElementById("shapesBg");
   let idx = 0;
 
-  function applyTypography(theme) {
-    titleEl.style.fontFamily = theme.font;
-    titleEl.style.color = theme.color;
-    titleEl.style.setProperty("--glow", theme.glow);
-    titleEl.classList.add("glow-pulse");
-    document.body.classList.toggle("airport-mode", !!theme.airport);
-  }
+  const SHAPE_TYPES = ["circle", "square", "triangle", "hexagon"];
+  const SHAPE_COUNT = 18;
+  const shapeEls = [];
 
-  function crossfadeBackground(theme) {
-    const incoming = showingA ? bgB : bgA;
-    const outgoing = showingA ? bgA : bgB;
-    incoming.style.background = theme.bg;
-    incoming.style.opacity = "1";
-    outgoing.style.opacity = "0";
-    showingA = !showingA;
-  }
+  function buildShapes() {
+    for (let i = 0; i < SHAPE_COUNT; i++) {
+      const el = document.createElement("div");
+      const type = SHAPE_TYPES[Math.floor(Math.random() * SHAPE_TYPES.length)];
+      const size = Math.round(40 + Math.random() * 160);
+      const minScale = (0.5 + Math.random() * 0.3).toFixed(2);
+      const maxScale = (1.1 + Math.random() * 0.5).toFixed(2);
+      const duration = (6 + Math.random() * 10).toFixed(1);
+      const delay = (Math.random() * 8).toFixed(1);
+      const colorSlot = i % 2 === 0 ? "c1" : "c2";
 
-  function buildLetters(cls) {
-    titleEl.innerHTML = "";
-    [...TEXT].forEach((ch, i) => {
-      const span = document.createElement("span");
-      span.className = "letter " + cls;
-      span.style.setProperty("--i", i);
-      span.textContent = ch === " " ? " " : ch;
-      titleEl.appendChild(span);
-    });
-  }
+      el.className = `shape ${type}`;
+      el.dataset.colorSlot = colorSlot;
+      el.style.left = Math.random() * 100 + "%";
+      el.style.top = Math.random() * 100 + "%";
+      el.style.width = size + "px";
+      el.style.height = size + "px";
+      el.style.setProperty("--min-scale", minScale);
+      el.style.setProperty("--max-scale", maxScale);
+      el.style.animationDuration = duration + "s";
+      el.style.animationDelay = delay + "s";
 
-  const FLAP_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-  function flapStep(span, stepsLeft, finalChar) {
-    span.classList.remove("flapping");
-    void span.offsetWidth; // force reflow to restart animation
-    span.classList.add("flapping");
-    setTimeout(() => {
-      span.textContent = stepsLeft > 0
-        ? FLAP_CHARS[Math.floor(Math.random() * FLAP_CHARS.length)]
-        : (finalChar === " " ? " " : finalChar);
-    }, 60);
-    if (stepsLeft > 0) {
-      setTimeout(() => flapStep(span, stepsLeft - 1, finalChar), 130);
+      shapesBg.appendChild(el);
+      shapeEls.push(el);
     }
   }
 
-  function buildAirportLetters() {
-    titleEl.innerHTML = "";
-    [...TEXT].forEach((ch, i) => {
-      const span = document.createElement("span");
-      span.className = "letter airport-tile";
-      span.style.setProperty("--i", i);
-      span.dataset.final = ch;
-      span.textContent = ch === " " ? " " : ch;
-      titleEl.appendChild(span);
-      setTimeout(() => flapStep(span, 5 + Math.floor(Math.random() * 3), ch), i * 90);
+  function applyShapeColors(theme) {
+    shapeEls.forEach((el) => {
+      el.style.backgroundColor = theme[el.dataset.colorSlot];
     });
   }
 
-  function transitionTo(theme) {
-    buildLetters("out");
-    crossfadeBackground(theme);
-    targetParticle = theme.particle;
+  function applyTheme(theme) {
+    document.body.style.backgroundColor = theme.bg;
+    applyShapeColors(theme);
+    titleEl.style.opacity = "0";
     setTimeout(() => {
-      applyTypography(theme);
-      if (theme.airport) {
-        buildAirportLetters();
-      } else {
-        buildLetters("in");
-      }
-    }, 700 + TEXT.length * 45 + 60);
+      titleEl.style.fontFamily = theme.font;
+      titleEl.style.color = theme.color;
+      titleEl.style.opacity = "1";
+    }, 600);
   }
 
-  // initial paint
-  bgA.style.background = themes[0].bg;
-  bgA.style.opacity = "1";
-  applyTypography(themes[0]);
-  buildLetters("in");
+  buildShapes();
+  applyTheme(themes[0]);
 
   setInterval(() => {
     idx = (idx + 1) % themes.length;
-    transitionTo(themes[idx]);
+    applyTheme(themes[idx]);
   }, HOLD_MS);
-
-  // ---------- Mouse interaction ----------
-  function checkTileProximity(x, y) {
-    const now = performance.now();
-    document.querySelectorAll("#title .letter.airport-tile").forEach((span) => {
-      const rect = span.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dist = Math.hypot(x - cx, y - cy);
-      const last = Number(span.dataset.lastFlap || 0);
-      if (dist < 80 && now - last > 500) {
-        span.dataset.lastFlap = now;
-        flapStep(span, 1, span.dataset.final);
-      }
-    });
-  }
-
-  window.addEventListener("pointermove", (e) => {
-    mouseCanvasX = e.clientX * devicePixelRatio;
-    mouseCanvasY = e.clientY * devicePixelRatio;
-
-    if (document.body.classList.contains("airport-mode")) {
-      checkTileProximity(e.clientX, e.clientY);
-    } else {
-      const nx = (e.clientX / window.innerWidth) * 2 - 1;
-      const ny = (e.clientY / window.innerHeight) * 2 - 1;
-      titleEl.style.transform = `rotateX(${(-ny * 10).toFixed(2)}deg) rotateY(${(nx * 10).toFixed(2)}deg)`;
-    }
-  });
-
-  window.addEventListener("pointerleave", () => {
-    mouseCanvasX = -9999;
-    mouseCanvasY = -9999;
-    titleEl.style.transform = "";
-  });
-
-  // ---------- Particle network background ----------
-  const canvas = document.getElementById("particles");
-  const ctx = canvas.getContext("2d");
-  let W, H, particles = [];
-  let currentParticle = themes[0].particle.slice();
-  let targetParticle = themes[0].particle.slice();
-  let mouseCanvasX = -9999, mouseCanvasY = -9999;
-
-  function resize() {
-    W = canvas.width = window.innerWidth * devicePixelRatio;
-    H = canvas.height = window.innerHeight * devicePixelRatio;
-    canvas.style.width = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
-  }
-  window.addEventListener("resize", resize);
-  resize();
-
-  function initParticles() {
-    const count = Math.round((window.innerWidth * window.innerHeight) / 16000);
-    particles = Array.from({ length: count }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.4 * devicePixelRatio,
-      vy: (Math.random() - 0.5) * 0.4 * devicePixelRatio,
-      r: (Math.random() * 1.6 + 0.6) * devicePixelRatio,
-    }));
-  }
-  initParticles();
-  window.addEventListener("resize", initParticles);
-
-  function lerp(a, b, t) { return a + (b - a) * t; }
-
-  const REPEL_RADIUS = 170 * devicePixelRatio;
-  const MAX_SPEED = 1.3 * devicePixelRatio;
-
-  function tick() {
-    ctx.clearRect(0, 0, W, H);
-
-    currentParticle[0] = lerp(currentParticle[0], targetParticle[0], 0.02);
-    currentParticle[1] = lerp(currentParticle[1], targetParticle[1], 0.02);
-    currentParticle[2] = lerp(currentParticle[2], targetParticle[2], 0.02);
-    const [r, g, b] = currentParticle;
-
-    const linkDist = 140 * devicePixelRatio;
-
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-
-      const mdx = p.x - mouseCanvasX;
-      const mdy = p.y - mouseCanvasY;
-      const mdist = Math.hypot(mdx, mdy);
-      if (mdist < REPEL_RADIUS && mdist > 0.01) {
-        const force = (1 - mdist / REPEL_RADIUS) * 0.9;
-        p.vx += (mdx / mdist) * force;
-        p.vy += (mdy / mdist) * force;
-      }
-
-      const speed = Math.hypot(p.vx, p.vy);
-      if (speed > MAX_SPEED) {
-        p.vx = (p.vx / speed) * MAX_SPEED;
-        p.vy = (p.vy / speed) * MAX_SPEED;
-      }
-
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vx *= 0.99;
-      p.vy *= 0.99;
-      if (p.x < 0 || p.x > W) p.vx *= -1;
-      if (p.y < 0 || p.y > H) p.vy *= -1;
-
-      if (mdist < linkDist * 1.3) {
-        const alpha = (1 - mdist / (linkDist * 1.3)) * 0.6;
-        ctx.strokeStyle = `rgba(${r|0},${g|0},${b|0},${alpha})`;
-        ctx.lineWidth = 0.7 * devicePixelRatio;
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(mouseCanvasX, mouseCanvasY);
-        ctx.stroke();
-      }
-
-      for (let j = i + 1; j < particles.length; j++) {
-        const q = particles[j];
-        const dx = p.x - q.x, dy = p.y - q.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < linkDist) {
-          const alpha = (1 - dist / linkDist) * 0.5;
-          ctx.strokeStyle = `rgba(${r|0},${g|0},${b|0},${alpha})`;
-          ctx.lineWidth = 0.6 * devicePixelRatio;
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(q.x, q.y);
-          ctx.stroke();
-        }
-      }
-    }
-
-    for (const p of particles) {
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(${r|0},${g|0},${b|0},0.85)`;
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    requestAnimationFrame(tick);
-  }
-  tick();
 </script>
 </body>
 </html>
